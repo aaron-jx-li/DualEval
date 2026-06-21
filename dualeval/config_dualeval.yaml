@@ -1,0 +1,100 @@
+# DualEval ranking config
+#
+# Pass this file to the CLI:
+#   python dualeval/dualeval.py --config dualeval/config_dualeval.yaml
+#
+# Or use the programmatic API (all fields optional; defaults shown below):
+#   from dualeval import fit_irt, load_static_jsonl, load_arena_reward_jsonl
+#   static_df = load_static_jsonl(config["input"]["static_jsonl"])
+#   arena_df  = load_arena_reward_jsonl(config["input"]["arena_reward_jsonl"])
+#   results   = fit_irt(static_df=static_df, arena_df=arena_df, **config["training"])
+
+# ---------------------------------------------------------------------------
+# Input
+# ---------------------------------------------------------------------------
+input:
+  # List of static-benchmark JSONL files (binary correctness labels).
+  # Required format per row:
+  #   model_label   string   — unique model identifier
+  #   dataset       string   — benchmark name (e.g. "gsm8k", "humaneval")
+  #   sample_index  int      — question index within the dataset
+  #   correct       0 or 1   — 1 if the model answered correctly
+  # Rows missing model_label or correct are skipped.
+  static_jsonl:
+    - results/static_eval/math/responses.jsonl
+    - results/static_eval/coding/responses.jsonl
+    - results/static_eval/misc/responses.jsonl
+
+  # List of arena reward JSONL files (continuous reward scores).
+  # Required format per row:
+  #   model_label   string   — unique model identifier
+  #   item_id       string   — unique question/prompt identifier
+  #   reward        float    — reward model score for this (model, prompt) pair
+  # Rows missing reward are skipped.
+  # Rewards are z-score normalised across all rows before training.
+  arena_reward_jsonl:
+    - results/public_reward/math/responses.jsonl
+    - results/public_reward/coding/responses.jsonl
+    - results/public_reward/misc/responses.jsonl
+    - results/public_reward/generic/responses.jsonl
+
+# ---------------------------------------------------------------------------
+# Training
+# ---------------------------------------------------------------------------
+training:
+  # Fitting mode.
+  #   static  — 2PL-IRT on binary correctness labels only
+  #   arena   — soft-pairwise distillation IRT on reward scores only
+  #   both    — joint fitting on shared (θ, b, a) parameters (recommended)
+  #   BT      — Bradley-Terry baseline; no per-question parameters
+  mode: both
+
+  # Optimisation
+  num_epochs: 2000
+  lr: 0.02
+
+  # Loss weights — these are the main knobs to tune.
+  #
+  #   lambda_static  weight on the static BCE loss
+  #                  (only active for mode=static or mode=both)
+  #   lambda_arena   weight on the soft-pairwise arena loss
+  #                  (only active for mode=arena or mode=both)
+  #   lambda_bb      weight on the "both-bad" anchoring term that penalises
+  #                  highly-discriminating questions where all models score
+  #                  poorly — prevents runaway difficulty estimates
+  #   reg_lambda     L2 regularisation on all parameters (θ, b, a)
+  #
+  # The defaults below reproduce the paper's experimental settings.
+  # If you have very few arena prompts, consider increasing lambda_static.
+  # If static and arena signals disagree, reduce whichever you trust less.
+  lambda_static: 1.0
+  lambda_arena: 1.0
+  lambda_bb: 0.2
+  reg_lambda: 0.001
+
+  # Both-bad detection threshold (optional).
+  # If set, any arena prompt where all model rewards fall below this
+  # percentile of the reward distribution is flagged as "both bad" and
+  # down-weighted via lambda_bb. Omit (~) to disable.
+  bb_ratio: ~
+
+  # Tie detection threshold (optional).
+  # If set, arena pairs whose reward difference is within this percentile
+  # band are treated as ties and receive reduced gradient signal.
+  # Omit (~) to disable.
+  tie_ratio: ~
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+output:
+  # Directory where results are written.
+  # Created if it does not exist.
+  output_dir: results/dualeval/my_run
+
+  # Set to true to skip matplotlib figures (useful in headless environments).
+  no_plot: true
+
+  # Set to true to also save the raw pairwise target tensor used during
+  # arena training (large file; off by default).
+  save_pairwise_targets: false

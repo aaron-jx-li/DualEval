@@ -1,0 +1,19 @@
+# Model APIs
+anthropic>=0.56.0
+openai>=1.0.0
+
+# Data / evaluation
+datasets>=4.0.0
+python-dotenv>=1.0.0
+tqdm>=4.0.0
+pyyaml>=6.0
+
+# IRT modeling
+numpy>=1.24.0
+pandas>=2.0.0
+torch>=2.0.0
+scipy>=1.10.0
+
+# Public reward model (reward/public_reward.py)
+transformers>=4.40.0
+# vllm>=0.4.0  # optional: faster scoring backend for reward/public_reward.py

@@ -1,0 +1,229 @@
+# Unified Arena sampling + evaluation config
+#
+# Sampling (where applicable):
+#   python demo/sample_arena.py --domain math    --config demo/config_arena.yaml
+#   python demo/sample_arena.py --domain coding  --config demo/config_arena.yaml
+#   python demo/sample_arena.py --domain generic --config demo/config_arena.yaml
+#
+# Evaluation:
+#   python eval/eval_arena.py --domain math    --config demo/config_arena.yaml
+#   python eval/eval_arena.py --domain coding  --config demo/config_arena.yaml
+#   python eval/eval_arena.py --domain misc    --config demo/config_arena.yaml
+#   python eval/eval_arena.py --domain generic --config demo/config_arena.yaml
+#
+# Note: misc has no sampling step — it uses a pre-existing sampled file.
+
+math:
+  sampling:
+    dataset: lmarena-ai/arena-human-preference-140k
+    split: train
+    judge_model: gpt-4.1-mini
+    output: data/arena_140k_math.jsonl
+    save_every: 200
+    min_confidence: 0.0
+    resume: true
+    max_rows: ~
+    timeout: 60
+
+  evaluation:
+    input_file: data/arena_140k_math.jsonl
+    output_dir: results/arena_eval/math
+    use_litellm: false
+    litellm_models: []
+    generation_max_tokens: 65536
+    model_max_tokens:
+      claude-haiku-4-5: 56000  # haiku-4-5-20251001 API cap is 64000, below the global 65536
+      gpt-5-mini: ~            # null = no limit
+      gpt-5.4: ~
+      gpt-5.4-mini: ~
+      gpt-5.5: ~
+      gpt-4.1: 32768
+      gpt-4.1-mini: 32768
+    save_every: 50
+    resume: true
+    retry_statuses:
+      - generation_error
+    max_workers: 8
+    generation_timeout: 300
+    models:
+      - gpt-4.1-mini
+      - gpt-4.1
+      - claude-sonnet-4-6
+      - claude-haiku-4-5
+      # - gpt-5.4
+      # - gpt-5-mini
+      # - gpt-5.4-mini
+      # - gpt-5.5
+      # - claude-opus-4-6
+      # - gemini-2.5-pro
+      # - gemini-2.5-flash
+      # - deepseek-v3.2
+      # - mistral-large-3
+      # - llama-4-maverick-instruct
+
+coding:
+  sampling:
+    dataset: lmarena-ai/arena-expert-5k
+    split: train
+    allowed_languages:
+      - en
+    judge_model: gpt-4.1-mini
+    judge_api_key_env: OPENAI_API_KEY
+    judge_base_url: https://api.openai.com/v1
+    output: data/arena_expert_5k_coding.jsonl
+    checkpoint: data/arena_expert_5k_coding_checkpoint.json
+    save_every: 100
+    min_confidence: 0.5
+    max_workers: 8
+    resume: true
+    timeout: 60
+    seed: 0
+
+  evaluation:
+    input_file: data/arena_expert_5k_coding.jsonl
+    first_k: 500
+    output_dir: results/arena_eval/coding
+    use_litellm: false
+    litellm_models: []
+    retry_statuses:
+      - generation_error
+    save_every: 50
+    resume: true
+    max_workers: 4
+    generation_timeout: 300
+    generation_max_tokens: 65536
+    model_max_tokens:
+      claude-haiku-4-5: 56000  # haiku-4-5-20251001 API max output is 64000, below the 65536 global
+      gpt-5-mini: ~
+      gpt-5.4: ~
+      gpt-5.4-mini: ~
+      gpt-5.5: ~
+      gpt-4.1: 32768
+      gpt-4.1-mini: 32768
+    models:
+      - gpt-4.1-mini
+      - gpt-4.1
+      - claude-sonnet-4-6
+      - claude-haiku-4-5
+      # - gpt-5.4
+      # - gpt-5-mini
+      # - gpt-5.4-mini
+      # - gpt-5.5
+      # - claude-opus-4-6
+      # - gemini-2.5-pro
+      # - gemini-2.5-flash
+      # - deepseek-v3.2
+      # - mistral-large-3
+      # - llama-4-maverick-instruct
+
+misc:
+  # No sampling section — misc uses a pre-existing sampled file.
+  evaluation:
+    input_file: data/arena_misc.jsonl
+    output_dir: results/arena_eval/misc
+    use_litellm: false
+    litellm_models: []
+    save_every: 50
+    resume: true
+    retry_statuses:
+      - generation_error
+    max_workers: 8
+    generation_timeout: 300
+    generation_max_tokens: 65536
+    model_max_tokens:
+      gpt-5-mini: ~    # null = no limit; model returns empty responses when capped
+      gpt-5.4: ~       # thinking model: exhausts 16384 on hard problems
+      gpt-5.4-mini: ~
+      gpt-5.5: ~
+      gpt-5.5-high: ~
+      claude-opus-4-7-thinking: ~  # extended thinking needs uncapped headroom
+      gpt-4.1: 32768
+      gpt-4.1-mini: 32768
+      claude-haiku-4-5: 56000  # misc tasks don't need the full 56k budget
+    models:
+      # - gpt-5.4
+      # - gpt-5-mini
+      - gpt-5.4-mini
+      - gpt-5.5
+      # - gpt-5.5-high
+      # - gpt-4.1
+      # - gpt-4.1-mini
+      # - claude-opus-4-6
+      - claude-opus-4-7
+      # - claude-opus-4-7-thinking
+      # - claude-sonnet-4-6
+      # - claude-haiku-4-5
+      # - gemini-3.1-pro
+      # - gemini-2.5-pro
+      # - gemini-2.5-flash
+      # - grok-4
+      # - deepseek-v3.2
+      # - mistral-large-3
+      # - qwen3-max-thinking
+      # - llama-4-maverick-instruct
+
+generic:
+  sampling:
+    dataset: lmarena-ai/arena-human-preference-140k
+    split: train
+    allowed_languages:
+      - en
+    judge_model: gpt-4.1-mini
+    judge_api_key_env: OPENAI_API_KEY
+    output: data/arena_140k_generic_judged.jsonl
+    max_kept: 1000
+    min_confidence: 0.85
+    min_prompt_len: 150
+    min_prompt_words: 20
+    max_workers: 8
+    save_every: 100
+    seed: 42
+    resume: true
+    timeout: 60
+    max_candidates: ~
+
+  evaluation:
+    input_file: data/arena_140k_generic_judged.jsonl
+    first_k: 500
+    output_dir: results/arena_eval/generic
+    openai_base_url: ${OPENAI_BASE_URL}
+    use_litellm: false
+    litellm_models: []
+    retry_statuses:
+      - generation_error
+    save_every: 50
+    resume: true
+    max_workers: 8
+    generation_timeout: 300
+    generation_max_tokens: 32000
+    model_max_tokens:
+      gpt-5-mini: ~    # null = no limit; model returns empty responses when capped
+      gpt-5.4: ~       # thinking model: exhausts 16384 on hard problems
+      gpt-5.4-mini: ~
+      gpt-5.5: ~
+      gpt-5.5-high: ~
+      claude-opus-4-7-thinking: ~  # extended thinking needs uncapped headroom
+      gpt-4.1: 10000
+      gpt-4.1-mini: 10000
+      claude-haiku-4-5: 10000  # generic tasks don't need the full 56k budget
+    models:
+      # - gpt-5.4
+      # - gpt-5-mini
+      - gpt-5.4-mini
+      - gpt-5.5
+      # - gpt-5.5-high
+      # - gpt-4.1
+      # - gpt-4.1-mini
+      # - claude-opus-4-6
+      - claude-opus-4-7
+      # - claude-opus-4-7-thinking
+      # - claude-sonnet-4-6
+      # - claude-haiku-4-5
+      # - gemini-3.1-pro
+      # - gemini-2.5-pro
+      # - gemini-2.5-flash
+      # - grok-4
+      # - deepseek-v3.2
+      # - mistral-large-3
+      # - qwen3-max-thinking
+      # - llama-4-maverick-instruct

@@ -1,0 +1,52 @@
+# Static coding evaluation config
+#
+# Workflow:
+#   python eval/eval_static.py --domain coding --config demo/config_static_coding.yaml
+
+sampling:
+  profile: paper
+  seed: 0
+  output_dir: results/static_eval/coding_v2
+  datasets:
+    - humaneval-plus
+    - mbpp-plus-sanitized
+    - livecodebench-v6
+
+evaluation:
+  sample_file: results/static_eval/coding/sampled_items.jsonl
+  output_dir: results/static_eval/coding_v2
+  save_every: 1
+  resume: true
+  max_workers: 8
+  generation_timeout: 300
+  generation_max_tokens: 65536
+  model_generation_timeouts:
+    gpt-5.5-high: 300
+    claude-opus-4-7-thinking: 300
+  model_max_tokens:
+    gpt-5.4-mini: ~
+    gpt-5.5: ~
+    gpt-5.5-high: ~
+    claude-opus-4-7-thinking: ~  # extended thinking needs uncapped headroom
+  use_litellm: false
+  models:
+    # - gpt-5.4
+    # - gpt-5-mini
+    - gpt-5.4-mini
+    - gpt-5.5
+    # - gpt-5.5-high
+    # - gpt-4.1
+    # - gpt-4.1-mini
+    # - claude-opus-4-6
+    - claude-opus-4-7
+    # - claude-opus-4-7-thinking
+    # - claude-sonnet-4-6
+    # - claude-haiku-4-5
+    # - gemini-3.1-pro
+    # - gemini-2.5-pro
+    # - gemini-2.5-flash
+    # - grok-4
+    # - deepseek-v3.2
+    # - mistral-large-3
+    # - qwen3-max-thinking
+    # - llama-4-maverick-instruct
