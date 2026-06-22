@@ -11,8 +11,8 @@ If you already have evaluation results for your models, you can rank them in min
 ## Install
 
 ```bash
-git clone https://github.com/your-org/dualeval.git
-cd dualeval
+git clone https://github.com/aaron-jx-li/DualEval.git
+cd DualEval
 pip install -r requirements.txt
 ```
 
