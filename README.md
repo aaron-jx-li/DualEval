@@ -2,9 +2,9 @@
 
 DualEval is an open-source Python package for ranking LLMs using **2-parameter Item Response Theory (IRT)**. Given binary correctness labels from static benchmarks and/or continuous reward scores from arena-style evaluations, DualEval jointly infers per-model ability, per-question difficulty, and per-question discrimination — producing a richer ranking than simple accuracy averaging.
 
-If you already have evaluation results for your models, you can rank them in minutes. The full paper pipeline that produced those results is also reproducible end-to-end; see [Reproducing the Paper](#reproducing-the-paper).
+If you already have evaluation results for your models, you can rank them in minutes. A demo that runs the full evaluation flow end-to-end with a public reward model is also included; see [Demo](#demo).
 
-> This is the official codebase for our paper: *DualEval: Jointly Ranking LLMs with Static Benchmarks and Arena Reward Signals via Item Response Theory*.
+> This is the official codebase for our paper: [*DualEval: Joint Model-Item Calibration for Unified LLM Evaluation*](https://arxiv.org/abs/XXXX.XXXXX) (arXiv link coming soon).
 
 ---
 
@@ -25,9 +25,9 @@ pip install -r requirements.txt
 **Static JSONL** — one JSON object per line, one row per `(model, question)` pair:
 
 ```json
-{"model_label": "gpt-4o",          "dataset": "gsm8k", "sample_index": 0, "correct": 1}
-{"model_label": "gpt-4o",          "dataset": "gsm8k", "sample_index": 1, "correct": 0}
-{"model_label": "claude-3-5-sonnet","dataset": "gsm8k", "sample_index": 0, "correct": 1}
+{"model_label": "gpt-5.5",         "dataset": "gsm8k", "sample_index": 0, "correct": 1}
+{"model_label": "gpt-5.5",         "dataset": "gsm8k", "sample_index": 1, "correct": 0}
+{"model_label": "claude-opus-4-7", "dataset": "gsm8k", "sample_index": 0, "correct": 1}
 ```
 
 | Field | Type | Description |
@@ -42,9 +42,9 @@ Rows missing `model_label` or `correct` are skipped.
 **Arena reward JSONL** — one JSON object per line, one row per `(model, prompt)` pair:
 
 ```json
-{"model_label": "gpt-4o",          "item_id": "arena_math_0042", "reward": 3.71}
-{"model_label": "gpt-4o",          "item_id": "arena_math_0043", "reward": 1.22}
-{"model_label": "claude-3-5-sonnet","item_id": "arena_math_0042", "reward": 4.05}
+{"model_label": "gpt-5.5",         "item_id": "arena_math_0042", "reward": 3.71}
+{"model_label": "gpt-5.5",         "item_id": "arena_math_0043", "reward": 1.22}
+{"model_label": "claude-opus-4-7", "item_id": "arena_math_0042", "reward": 4.05}
 ```
 
 | Field | Type | Description |
@@ -114,9 +114,9 @@ print(results["model_ranking"])
 
 ---
 
-## Reproducing the Paper
+## Demo
 
-The `demo/` directory contains the sampling scripts, evaluation configs, and a shell script that reproduces the paper's full experimental pipeline using the public Skywork reward model.
+The `demo/` directory contains sampling scripts, evaluation configs, and a shell script that run the full evaluation flow end-to-end using the public Skywork reward model.
 
 ### Setup
 
@@ -222,7 +222,7 @@ reward/                     Reward model scoring
   public_reward.py          Score responses with Skywork-Reward-V2-Qwen3-8B
   rm_validate.py            Validate RM pair preferences against human labels
 
-demo/                       End-to-end paper reproduction pipeline
+demo/                       End-to-end demo pipeline
   run_pipeline.sh           One-shot script: datasets → responses → rewards → rankings
   sample_static.py          Sample static benchmark questions (--domain math|misc)
   sample_arena.py           Sample arena prompts from HF datasets (--domain math|coding|generic)
@@ -250,7 +250,7 @@ See the paper for the full technical formulation: the 2PL-IRT model for static d
 
 ```bibtex
 @article{dualeval2026,
-  title   = {DualEval: Jointly Ranking LLMs with Static Benchmarks and Arena Reward Signals via Item Response Theory},
+  title   = {DualEval: Joint Model-Item Calibration for Unified LLM Evaluation},
   journal = {arXiv preprint},
   year    = {2026},
 }
