@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
-DualEval is an open-source Python package for ranking LLMs using **2-parameter Item Response Theory (IRT)**. Given binary correctness labels from static benchmarks and/or continuous reward scores from arena-style evaluations, DualEval jointly infers per-model ability, per-question difficulty, and per-question discrimination — producing a richer ranking than simple accuracy averaging.
+DualEval is an open-source Python package that unifies two LLM evaluation signals which are normally kept apart — objective correctness on static benchmarks and reward-model scores on open-ended arena prompts — into a **single, consistent model ranking**. Instead of averaging accuracies or reconciling two separate leaderboards by hand, it jointly calibrates both signals on one shared latent ability scale, and in the same fit recovers per-question difficulty and discrimination for interpretable, item-level diagnostics.
 
 If you already have evaluation results for your models, you can rank them in minutes. A demo that runs the full evaluation flow end-to-end with a public reward model is also included; see [Demo](#demo).
 
