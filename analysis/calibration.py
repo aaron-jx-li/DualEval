@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""
 """Held-out calibration of DualEval predictions (Appendix).
 
 We use a (model, item)-CELL-level 80/20 random holdout rather than the
@@ -40,7 +39,6 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
-import os
 import sys
 import time
 from pathlib import Path

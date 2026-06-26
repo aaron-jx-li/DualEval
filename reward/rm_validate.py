@@ -22,8 +22,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
-from tqdm import tqdm  # noqa: E402
-
 DEFAULT_PUBLIC_RM_DIR = Path("results") / "public_RM"
 DEFAULT_PUBLIC_VALIDATE_DIR = Path("results") / "public_validate"
 

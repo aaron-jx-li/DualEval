@@ -765,7 +765,7 @@ def plot_sample_efficiency(summary: pd.DataFrame, save_path: Path) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="ranking/config_dualeval.yaml")
+    parser.add_argument("--config", default="dualeval/config_dualeval.yaml")
     parser.add_argument("--static-jsonl", nargs="*", default=None)
     parser.add_argument("--arena-reward-jsonl", nargs="*", default=None)
     parser.add_argument("--output-dir", default="results/dualeval_baseline_comparison")

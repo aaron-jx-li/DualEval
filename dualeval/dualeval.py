@@ -13,12 +13,11 @@ Supported modes:
        P(i > j | q) = sigmoid(s_i - s_j)
        No question-specific parameters; both-bad pairs included in loss.
 
-Design choices vs rank_rm.py:
+Design notes:
   - Both-bad pairs are excluded from the arena BCE loss and only enter the
-    bb anchoring term.  In rank_rm.py the hard set included both-bad pairs,
-    so the arena loss pushed theta_i relative to theta_j while the bb loss
-    simultaneously pushed both toward failure — conflicting gradients on the
-    same pairs.  Here the two terms operate on disjoint pair sets.
+    bb anchoring term, so the two terms operate on disjoint pair sets. This
+    avoids conflicting gradients on the same pairs (the arena loss pushing
+    theta_i relative to theta_j while the bb loss pushes both toward failure).
   - bb_ratio and tie_ratio are the sole threshold interface.  Percentile-
     based thresholds are derived from the empirical pairwise z-score
     distribution, so the actual flagged fractions match the requested ratios
@@ -26,7 +25,7 @@ Design choices vs rank_rm.py:
     are not supported.
 
 Example:
-    python ranking/dualeval.py --config ranking/config_dualeval.yaml
+    python dualeval/dualeval.py --config dualeval/config_dualeval.yaml
 """
 
 from __future__ import annotations

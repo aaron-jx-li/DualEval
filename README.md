@@ -93,7 +93,7 @@ Then run:
 python dualeval/dualeval.py --config my_config.yaml
 ```
 
-Outputs `model_ranking.csv` (sorted θ), `question_ranking.csv` (per-question difficulty and discrimination), and `metrics.json`.
+Outputs `model_ranking.csv` (sorted θ), `question_ranking.csv` (per-question difficulty and discrimination), and `run_summary.json`.
 
 ### Programmatic API
 

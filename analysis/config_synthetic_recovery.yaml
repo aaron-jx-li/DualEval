@@ -1,0 +1,61 @@
+# Synthetic-contamination recovery config (§4.3, residual-based anomaly detection)
+#
+# Used by:
+#   python analysis/anomaly_detection.py --config analysis/config_synthetic_recovery.yaml
+#
+# The experiment injects artificial contamination into either static labels or
+# arena reward scores, refits DualEval on the contaminated data, and checks
+# whether residual diagnostics recover the injected (model, item) cells. It is
+# fully offline and reuses the same input JSONL as the main ranking run.
+
+# ---------------------------------------------------------------------------
+# Input  — same format as dualeval/config_dualeval.yaml
+# ---------------------------------------------------------------------------
+input:
+  static_jsonl:
+    - results/static_eval/math/responses.jsonl
+    - results/static_eval/coding/responses.jsonl
+    - results/static_eval/misc/responses.jsonl
+  arena_reward_jsonl:
+    - results/public_reward/math/responses.jsonl
+    - results/public_reward/coding/responses.jsonl
+    - results/public_reward/misc/responses.jsonl
+
+# ---------------------------------------------------------------------------
+# Training  — DualEval fit on the (contaminated) data
+# ---------------------------------------------------------------------------
+training:
+  num_epochs: 2000
+  lr: 0.02
+  lambda_static: 1.0
+  lambda_arena: 1.0
+  lambda_bb: 0.2
+  reg_lambda: 0.001
+  bb_ratio: 0.15
+  tie_ratio: 0.15
+
+# ---------------------------------------------------------------------------
+# Experiment  — contamination injection settings
+# ---------------------------------------------------------------------------
+experiment:
+  # Fraction of cells contaminated, swept across runs.
+  injection_rates: [0.005, 0.01, 0.02, 0.05]
+  # Random seeds; results are averaged across them.
+  seeds: [0, 1, 2, 3, 4]
+  # Injection rate is taken relative to "all" cells or only "candidates".
+  rate_denominator: all
+  # Inject into "static" correctness labels or "arena" reward scores.
+  injection_target: static
+  # Fraction of items eligible to receive contamination.
+  candidate_pool_fraction: 0.30
+  # Multiplier applied to arena rewards when injection_target is "arena".
+  arena_reward_boost: 2.0
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+output:
+  output_dir: results/synthetic_recovery/default
+  # Number of top-residual cells written per run.
+  top_cells_to_save: 500
+  quiet: false
