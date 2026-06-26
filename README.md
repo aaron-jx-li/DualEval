@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
-DualEval is an open-source Python package that unifies two LLM evaluation signals which are normally kept apart — objective correctness on static benchmarks and open-ended response quality from arena-style comparisons — into a **single, consistent model ranking**. Instead of averaging accuracies or reconciling two separate leaderboards by hand, it jointly calibrates both signals on one shared latent ability scale, and in the same fit recovers per-question difficulty and discrimination for interpretable, item-level diagnostics. The arena quality signal can come from any judge; in this work we use scores from a reward model.
+DualEval is an open-source Python package that unifies two LLM evaluation signals which are normally kept apart — objective correctness on static benchmarks and open-ended response quality from arena-style comparisons — into a **single, consistent model ranking**. Instead of averaging accuracies or reconciling two separate leaderboards by hand, it jointly calibrates both signals on one shared latent ability scale, and in the same fit recovers per-question difficulty and discrimination for interpretable, item-level diagnostics. The arena quality signal is generic; in this work we instantiate it with reward-model scores.
 
 If you already have evaluation results for your models, you can rank them in minutes. A demo that runs the full evaluation flow end-to-end with a public reward model is also included; see [Demo](#demo).
 
