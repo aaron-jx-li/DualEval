@@ -1,6 +1,6 @@
 # DualEval
 
-[![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX)
+[![arXiv](https://img.shields.io/badge/arXiv-2606.26429-b31b1b.svg)](https://arxiv.org/abs/2606.26429)
 [![Project Page](https://img.shields.io/badge/Project-Page-1f6feb.svg)](https://dualeval.github.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
@@ -9,7 +9,7 @@ DualEval is an open-source Python package for ranking LLMs using **2-parameter I
 
 If you already have evaluation results for your models, you can rank them in minutes. A demo that runs the full evaluation flow end-to-end with a public reward model is also included; see [Demo](#demo).
 
-> This is the official codebase for our paper: [*DualEval: Joint Model-Item Calibration for Unified LLM Evaluation*](https://arxiv.org/abs/XXXX.XXXXX) (arXiv link coming soon).
+> This is the official codebase for our paper: [*DualEval: Joint Model-Item Calibration for Unified LLM Evaluation*](https://arxiv.org/abs/2606.26429).
 
 ---
 
@@ -256,7 +256,7 @@ See the paper for the full technical formulation: the 2PL-IRT model for static d
 ```bibtex
 @article{dualeval2026,
   title   = {DualEval: Joint Model-Item Calibration for Unified LLM Evaluation},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2606.26429},
   year    = {2026},
 }
 ```
