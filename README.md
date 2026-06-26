@@ -131,8 +131,10 @@ Copy `.env.example` to `.env` and fill in your API keys:
 OPENAI_API_KEY=...
 ANTHROPIC_API_KEY=...
 GOOGLE_API_KEY=...       # for Gemini models
-OPENROUTER_API_KEY=...   # optional, for OpenRouter routing
+OPENROUTER_API_KEY=...   # routes Grok, DeepSeek, Qwen, Mistral, Llama
 ```
+
+You only need keys for the providers whose models you actually evaluate. See `.env.example` for optional settings (custom base URLs, LiteLLM proxy).
 
 ### Running the pipeline
 
